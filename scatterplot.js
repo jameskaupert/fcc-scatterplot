@@ -13,7 +13,7 @@ req.onload = () => {
 
   // set up size
   const width = 1000;
-  const height = 500;
+  const height = 700;
   const margin = { top: 60, bottom: 60, left: 60, right: 60 };
 
   // set up axes
@@ -67,11 +67,43 @@ req.onload = () => {
     .attr("cx", (d, i) => xScale(d["Year"]))
     .attr("cy", (d, i) => yScale(d["Time"]))
     .attr("r", 5)
+    .attr("class", "dot")
+    .attr("data-xvalue", d => d["Year"])
+    .attr("data-yvalue", d => d["Time"])
     .attr("fill", (d, i) => {
       return d.Doping === "" ? "#D4B86B" : "#545A93";
     })
     .style("stroke", "black")
     .style("stroke-width", 0.5);
+
+  const legend = svg
+    .selectAll(".legend")
+    .data([
+      { label: "No Doping", color: "#D4B86B" },
+      { label: "Doping", color: "#545A93" }
+    ])
+    .enter()
+    .append("g")
+    .attr("class", "legend")
+    .attr("id", "legend")
+    .attr("height", 100)
+    .attr("width", 100)
+    .attr("transform", (d, i) => {
+      return `translate(${width - margin.right}, ${height -
+        margin.bottom * 5 -
+        i * 30})`;
+    });
+
+  console.log(legend);
+
+  legend
+    .append("rect")
+    .attr("width", 20)
+    .attr("height", 20)
+    .style("fill", d => d["color"])
+    .style("stroke", "black");
+
+  legend.append("text").text(d => d["label"]);
 
   // console.log(points);
 };
