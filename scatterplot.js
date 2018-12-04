@@ -59,6 +59,15 @@ req.onload = () => {
     .attr("transform", `translate(${margin.left}, 0)`)
     .call(yAxis);
 
+  const tooltip = d3
+    .select(".scatterplot")
+    .append("div")
+    .attr("id", "tooltip")
+    .style("opacity", 0)
+    .style("position", "absolute")
+    .style("z-index", 10)
+    .style("display", "none");
+
   const points = svg
     .selectAll("circle")
     .data(data)
@@ -74,7 +83,32 @@ req.onload = () => {
       return d.Doping === "" ? "#D4B86B" : "#545A93";
     })
     .style("stroke", "black")
-    .style("stroke-width", 0.5);
+    .style("stroke-width", 0.5)
+    .on("mouseover", (d, i) => {
+      tooltip
+        .style("opacity", "1")
+        .style("display", "block")
+        .style("top", event.pageY - 10 + "px")
+        .style("left", event.pageX + 10 + "px")
+        .html(
+          '<div class="tooltipWrapper"><p>' +
+            d["Year"] +
+            " - " +
+            d["Name"] +
+            " (" +
+            d["Time"].getMinutes() +
+            ":" +
+            d["Time"].getSeconds() +
+            ")" +
+            "</p><p>" +
+            d["Doping"] +
+            "</p></div>"
+        )
+        .attr("data-year", d["Year"]);
+    })
+    .on("mouseout", (d, i) => {
+      tooltip.style("opacity", 0).style("display", "none");
+    });
 
   const legend = svg
     .selectAll(".legend")
@@ -103,7 +137,10 @@ req.onload = () => {
     .style("fill", d => d["color"])
     .style("stroke", "black");
 
-  legend.append("text").text(d => d["label"]);
-
-  // console.log(points);
+  legend
+    .append("text")
+    .text(d => d["label"])
+    .attr("transform", (d, i) => {
+      return `translate(${-margin.right * 1.5}, 15)`;
+    });
 };

@@ -22,3 +22,17 @@ h2 {
   padding: 0;
   margin: 0;
 }
+
+p {
+  margin: 0;
+  padding: 1rem;
+}
+
+.tooltipWrapper {
+  background-color: #efefef;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 1rem;
+  border-radius: 5px;
+}
